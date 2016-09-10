@@ -17,14 +17,27 @@ void loop()
 {
   //Limpa a tela
   lcd.clear();
-  //Posiciona o cursor na coluna 3, linha 0;
+  showLevel();
+  //showCustomMessage();
+}
+
+void showLevel(){
   lcd.setCursor(0, 0);
-  //Envia o texto entre aspas para o LCD
   lcd.print("NIVEL CAIXA");
   lcd.setCursor(3, 1);
   lcd.print("APROX: 100L");
   delay(5000);
-   
+}
+
+void showCustomMessage(){
+  lcd.setCursor(0, 0);
+  lcd.print("ECONOMIZE AGUA");
+  lcd.setCursor(3, 1);
+  lcd.print("!!!! =) !!!!");
+  delay(2000);
+}
+
+void animate(){
   //Rolagem para a esquerda
   for (int posicao = 0; posicao < 3; posicao++)
   {
