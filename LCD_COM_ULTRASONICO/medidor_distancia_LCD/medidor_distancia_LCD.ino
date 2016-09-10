@@ -6,11 +6,15 @@
  
 //Define os pinos que serão utilizados para ligação ao display
 LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
- 
+
+//Define as variáveis utilizadas nos calculos da distancia
+const int trig = 9, echo = 10;
+long duration, Distanceincm, Litros;
+
 void setup()
 {
-  //Define o número de colunas e linhas do LCD
-  lcd.begin(16, 2);
+  setupLCD();
+  setupUltrasonic();
 }
  
 void loop()
@@ -21,34 +25,41 @@ void loop()
   //showCustomMessage();
 }
 
+
+void setupLCD(){
+  lcd.begin(16, 2);
+}
+
+void setupUltrasonic(){
+  pinMode(trig, OUTPUT);
+  pinMode(echo, INPUT);
+}
+
 void showLevel(){
   lcd.setCursor(0, 0);
-  lcd.print("NIVEL CAIXA");
+  lcd.print("NIVEL EM LITROS");
   lcd.setCursor(3, 1);
-  lcd.print("APROX: 100L");
+  lcd.print(calc());
+  
+   lcd.setCursor(9, 1);
+   lcd.print(Distanceincm);
   delay(5000);
 }
 
-void showCustomMessage(){
-  lcd.setCursor(0, 0);
-  lcd.print("ECONOMIZE AGUA");
-  lcd.setCursor(3, 1);
-  lcd.print("!!!! =) !!!!");
-  delay(2000);
+int calc(){
+  digitalWrite(trig, HIGH);
+  delay(15);
+  digitalWrite(trig, LOW);
+  duration = pulseIn(echo, HIGH);
+  Distanceincm = duration / 58;  
+  Litros = ((115 - Distanceincm)*10);
+
+  Serial.print("Distance in cm = ");
+  Serial.print(Distanceincm);
+  Serial.print("Litros");
+  Serial.print(Litros);
+  
+  return Litros;
 }
 
-void animate(){
-  //Rolagem para a esquerda
-  for (int posicao = 0; posicao < 3; posicao++)
-  {
-    lcd.scrollDisplayLeft();
-    delay(300);
-  }
-   
-  //Rolagem para a direita
-  for (int posicao = 0; posicao < 6; posicao++)
-  {
-    lcd.scrollDisplayRight();
-    delay(300);
-  }
-}
+
